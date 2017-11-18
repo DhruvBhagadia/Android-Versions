@@ -22,7 +22,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
 
     private static RecyclerView.Adapter adapter;
@@ -40,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
         myOnClickListener = new MyOnClickListener(this);
 
@@ -66,6 +70,15 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
 
     private static class MyOnClickListener implements View.OnClickListener {
 
@@ -109,7 +122,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
-        if (item.getItemId() == R.id.add_item) {
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        else if (item.getItemId() == R.id.add_item) {
             //check if any items to add
             if (removedItems.size() != 0) {
                 addRemovedItemToList();
@@ -131,6 +151,30 @@ public class MainActivity extends AppCompatActivity {
         adapter.notifyItemInserted(addItemAtListPosition);
         removedItems.remove(0);
 
+    }
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_Android) {
+            Toast.makeText(getApplicationContext(), "About android is clicked", Toast.LENGTH_SHORT).show();
+
+        } else if (id == R.id.nav_help) {
+            Toast.makeText(getApplicationContext(), "Help is clicked", Toast.LENGTH_SHORT).show();
+
+        } else if (id == R.id.nav_share) {
+            Toast.makeText(getApplicationContext(), "Share is clicked", Toast.LENGTH_SHORT).show();
+
+        } else if (id == R.id.nav_send) {
+            Toast.makeText(getApplicationContext(), "Send is clicked", Toast.LENGTH_SHORT).show();
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
 }
